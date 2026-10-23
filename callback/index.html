@@ -1,0 +1,19 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Tesla OAuth callback</title>
+<meta name="referrer" content="no-referrer"></head>
+<body style="font-family:system-ui;max-width:640px;margin:3em auto">
+<h1>Tesla authorization</h1>
+<div id="out">Waiting...</div>
+<script>
+// Static page: reads ?code=&state= locally and displays them. Nothing is sent anywhere.
+const p = new URLSearchParams(location.search);
+const out = document.getElementById('out');
+if (p.get('error')) { out.textContent = 'Error: ' + p.get('error') + ' ' + (p.get('error_description')||''); }
+else if (p.get('code')) {
+  out.innerHTML = '<p>Copy this full URL (or just the code) and give it to Grok Bot within a few minutes. Codes expire quickly.</p>' +
+   '<p><b>code:</b></p><textarea id="c" rows="4" style="width:100%"></textarea>' +
+   '<p><b>state:</b> <code id="s"></code></p><button id="b">Copy code</button>';
+  document.getElementById('c').value = p.get('code');
+  document.getElementById('s').textContent = p.get('state')||'';
+  document.getElementById('b').onclick = () => navigator.clipboard.writeText(p.get('code'));
+} else { out.textContent = 'No code in URL.'; }
+</script></body></html>
